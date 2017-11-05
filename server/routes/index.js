@@ -1,0 +1,65 @@
+var express = require('express');
+var router = express.Router();
+var flash    = require('connect-flash');
+
+module.exports = function(passport){
+
+	router.post('/login', (req, res, next) => {
+     passport.authenticate('login', (err, user) => {
+          if (err) {
+            if (err.name === 'IncorrectCredentialsError') {
+              return res.status(400).json({
+                status : "error",
+                message: err.message
+              });
+            }
+               return res.status(400).json({
+                status : "error",
+                message: 'Could not process the form.'
+            });
+          }
+          req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            return res.status(201).send({status:"success"});
+
+          });  
+          
+        })(req, res, next);
+      });
+
+	/* GET Home Page */
+	router.get('/user', function(req, res){
+        if(req.isAuthenticated()){
+             res.json({ 
+                user: req.user,
+                status: "success",
+                msg:"welcome to home."
+             });
+        }else{
+            console.log("err")
+            res.json({ 
+                status: "error",
+                msg:"Please Log In again",
+                user:""
+             });
+        }
+        
+       
+	});
+
+	/* Handle Logout */
+	router.get('/logout', function(req, res) {
+    console.log("I am Logout")
+    //req.session.distory();
+    req.logout(); 
+    
+    res.json({ 
+            status: "logout",
+            msg:"Please Log In again",
+           
+         });
+
+    
+});
+	return router;
+}
