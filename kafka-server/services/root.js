@@ -4,7 +4,7 @@ function handle_request(msg, callback){
 
    
    
-    console.log("In handle request:"+ JSON.stringify(msg));
+    console.log("In Root handle request:"+ JSON.stringify(msg));
     Content.findOne({ 'userid' :  msg.userid , 'originalname':'root' }, function(err, data) {
         var res = {};
         if (err){

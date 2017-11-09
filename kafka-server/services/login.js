@@ -1,4 +1,6 @@
 var User = require('../model/user');
+var Content = require('../model/content');
+var bCrypt = require('bcrypt-nodejs');
 
 function handle_request(msg, callback){
 
@@ -7,8 +9,7 @@ function handle_request(msg, callback){
     console.log("In handle request:"+ JSON.stringify(msg));
     User.findOne({ 'email' :  msg.username }, function(err, user) {
         var res = {};
-        // In case of any error, return using the done method
-        console.log("user:-"+user)
+       
         if (err){
             callback(null, {
                 msg : 'System Error, Please try later.',
@@ -17,20 +18,26 @@ function handle_request(msg, callback){
         }
         else if (!user){
             callback(null, {
-                msg : 'Username Invalid.',
+                msg : 'Invalid Username.',
                 status : 'error'
             });                    
-        }else if (msg.password != 1234){
+        }else if (!isValidPassword(user,msg.password)){
             callback(null, {
-                msg : 'Username Password.',
+                msg : 'Invalid Password.',
                 status : 'error'
             });
         }else{ 
-            callback(null, {
-                user:user,
-                msg : 'successful login.',
-                status : 'success'
-            });
+           
+                 callback(null, {
+                       
+                        user:user,
+                        msg : 'successful login.',
+                        status : 'success'
+                    });
+                
+                
+          
+            
         }
         
     }
@@ -40,5 +47,7 @@ function handle_request(msg, callback){
 
    
 }
-
+var isValidPassword = function(user, password){
+    return bCrypt.compareSync(password, user.password);
+}
 exports.handle_request = handle_request;

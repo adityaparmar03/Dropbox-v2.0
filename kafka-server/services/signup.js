@@ -42,7 +42,7 @@ function handle_request(msg, callback){
             content.date = getDate();
             content.star = "no";
             content.type = "folder";
-            content.userid = user._id;
+            content.userid = user.id;
 
             content.save();
             callback(null, {
