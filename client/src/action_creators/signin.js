@@ -11,7 +11,21 @@ export function INIT(){
      axios.get(URL+"user",{withCredentials: true})
         .then(function (response) {
            
-           return dispatch({ type : "SIGNIN_RESULT", payload : response.data } )
+            if(response.data.status == "success"){
+              axios.post(URL+"home/root",{userid:response.data.user._id})
+              .then(function (response) {
+  
+                return dispatch({ type : "ROOT_RESULT", payload : response.data } )
+  
+              })
+              .catch(function (error) {
+                return dispatch({ type : "SIGNIN_ERROR", payload : error } )
+              });
+            }else{
+
+            }
+            
+
        
         })
         .catch(function (error) {
@@ -22,15 +36,7 @@ export function INIT(){
 }
 export function SignIn(data){
     return  dispatch => {
-        
-        /*axios.post(URL+"login", data)
-          .then(function (response) {
-            return dispatch({ type : "SIGNIN_RESULT", payload : response.data } )
-          })
-          .catch(function (error) {
-            return dispatch({ type : "SIGNIN_ERROR", payload : error } )
-          });*/
-          
+
           fetch(URL+"login", {
             method: 'POST',
             headers: {
@@ -39,14 +45,10 @@ export function SignIn(data){
             },
             credentials:'include',
             body: JSON.stringify(data)
-        }).then(res => {
-          if(res.status===201)
-          return dispatch({ type : "SIGNIN_RESULT", payload : {status:"success",msg:"Account created successfully."} } )
-          else
-          return dispatch({ type : "SIGNIN_RESULT", payload : {status:"error",msg:"Username or Password may wrong."} } )
-          
-        })
-            .catch(error => {
+        }).then(response => { return response.json(); })
+        .then(function(data) {
+          dispatch({ type : "SIGNIN_RESULT", payload : data } )
+        }).catch(error => {
                 console.log("This is error");
                 
         })}}
