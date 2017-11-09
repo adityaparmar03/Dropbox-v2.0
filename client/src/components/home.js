@@ -28,16 +28,42 @@ class Home extends Component {
      }
   
     componentDidMount() {
-        this.props.INIT()
+
+        if(this.state.currentfolderid === "")
+         {
+            this.props.INIT(function(rootid){
+                window.history.pushState({data:rootid},"",'/home')
+            })
+         }
+         window.onpopstate = (event)=> {
+                console.log(event)
+                if(event.state==null || event.state == undefined)
+                {
+                    this.props.INIT(function(rootid){
+                        window.history.pushState({data:rootid},"",'/home')
+                    })
+
+                }
+                else if(event.state.hasOwnProperty('state')){
+                    this.props.INIT(function(rootid){
+                        window.history.pushState({data:rootid},"",'/home')
+                    })
+                }
+                else{
+                    this.props.LOADFOLDER(this.state.userid,event.state.data)
+                }
+                
+            } 
+         
+          
        
-        
+       
     }
+   
+  
     componentWillReceiveProps(nextProps) {
         if (nextProps.home) {
-          if(nextProps.home.status === 'error'){
-                this.props.history.push('/signin');
-          }
-          else if(nextProps.home.status === 'logout'){
+          if(nextProps.home.userid === undefined || nextProps.home.status === 'logout'){
                 this.props.history.push('/signin');
           }
           else{
@@ -50,6 +76,7 @@ class Home extends Component {
                 currentfolderid:nextProps.home.currentfolderid
               
               })
+           
           }  
          
         }
@@ -62,6 +89,7 @@ class Home extends Component {
  
  
      }
+     
     handleFileUpload = (event) => {
         
                
@@ -88,7 +116,8 @@ class Home extends Component {
     }
 
     getData(folder,type){
-      this.props.history.push('/?f='+folder._id)
+        window.history.pushState({data:folder._id},"",'/home/'+folder.originalname)
+        this.props.LOADFOLDER(this.state.userid,folder._id)
     }
     display(file,i){
       
@@ -171,17 +200,8 @@ class Home extends Component {
         
         
     }
-    
-    LOADFOLDER(){
-        
-         let query = queryString.parse(window.location.search);
-        
-         if(query.f!=this.state.currentfolderid){
-            this.props.LOADFOLDER(this.state.userid,query.f)
-         }
-        
-
-    }
+  
+   
     render() {
         return (
             <div className="container-fluid">  
@@ -214,7 +234,7 @@ class Home extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                      {    this.LOADFOLDER() }
+                     
                       {
                      
                          this.state.files.map((this.display),this)
