@@ -36,7 +36,7 @@ router.post('/load', function(req, res) {
 	
 });
 router.post('/root', function(req, res) {
-
+console.log("root-userid:"+req.body.userid)
    kafka.make_request('root_topic',{
         "userid":req.body.userid,
         }, function(err,results){
@@ -50,8 +50,8 @@ router.post('/root', function(req, res) {
         }else{
     
             res.json({
-                status:"success",
-                msg:"Get Root ID successfully ",
+                status:results.status,
+                msg:results.msg,
                 rootid : results.rootid
             })
            

@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
 var upload = multer({storage:storage}).single('myfile');
 
 router.post('/', upload, function (req, res, next) {
-    console.log(("cueeee"+req.body.currentfolderid))
+   
     kafka.make_request('uploadfile_topic',{
         "originalname":req.file.originalname,
         "virtualname":req.file.virtualname,

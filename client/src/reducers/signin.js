@@ -2,6 +2,7 @@
 var signin_initialstate ={
     status:"",
     msg:"",
+    currentfolderid:""
 
 }
 export default function(state=signin_initialstate,action){
@@ -22,11 +23,21 @@ export default function(state=signin_initialstate,action){
                 
         }
     }
+    if(action.type === "ROOT_RESULT"){
+        return{
+            ...state,
+            currentfolderid:action.payload.rootid,
+            status:action.payload.status,
+            msg:action.payload.msg
+                 
+        }
+    }
     if(action.type === "LOGOUT"){
         return{
             ...state,
             status:"",
             msg:"",
+            currentfolderid:""
            
                  
         }

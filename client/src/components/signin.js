@@ -28,7 +28,12 @@ class SignIn extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.signin) {
           if(nextProps.signin.status === 'success'){
-             this.props.history.push('/?q=123')
+
+             this.props.history.push('/home')
+            /* this.setState({
+                status:nextProps.signin.status,
+                msg:nextProps.signin.msg
+              })*/
           }
           else{
             this.setState({

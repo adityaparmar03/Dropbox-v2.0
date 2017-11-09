@@ -8,19 +8,25 @@ module.exports = function(passport){
      passport.authenticate('login', (err, user) => {
           if (err) {
             if (err.name === 'IncorrectCredentialsError') {
-              return res.status(400).json({
+              return res.json({
                 status : "error",
-                message: err.message
+                msg: err.message
               });
             }
-               return res.status(400).json({
+               return res.json({
                 status : "error",
-                message: 'Could not process the form.'
+                msg: 'Could not process the form.'
             });
           }
-          req.logIn(user, function(err) {
+          var userid = user._id;
+          req.logIn(user, function(err,user) {
             if (err) { return next(err); }
-            return res.status(201).send({status:"success"});
+           
+            return res.json({
+              userid : userid,
+              status : "success",
+              msg:"Successfully Logged In."
+            })
 
           });  
           
