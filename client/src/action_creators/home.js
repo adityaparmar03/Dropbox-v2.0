@@ -3,7 +3,7 @@ import {URL} from '../constant';
 //const headers = {
 //    'Accept': 'application/json'
 //};
-export function INIT(){
+export function INIT(callback){
     return  dispatch => {
         
        axios.get(URL+"user",{withCredentials: true})
@@ -11,51 +11,38 @@ export function INIT(){
               var userid = response.data.user._id;
               dispatch({ type : "HOME_RESULT", payload : response.data } )
               
-               /*axios.post(URL+"home/root",{userid:response.data.user._id})
-                .then(function (response) {
-                   
-                   dispatch({ type : "ROOT_RESULT", payload : response.data } )
-                
-                   axios.post(URL+"folder/load",{userid:userid,parentfolderid:response.data.rootid})
-                   .then(function (response) {
-                     return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
-                   })
-                   .catch(function (error) {
-                     return dispatch({ type : "HOME_ERROR", payload : error } )
-                   });
-                })
-                .catch(function (error) {
-                  return dispatch({ type : "HOME_ERROR", payload : error } )
-                });
+              axios.post(URL+"home/root",{userid:response.data.user._id})
+              .then(function (response) {
+
+              
+                dispatch({ type : "ROOT_RESULT", payload : response.data } )
+                var rootid = response.data.rootid
+                axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":response.data.rootid}).then((response)=>{
+                  callback(rootid)
+                  return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
                  
-         
-              */})
+                }).catch(function (error) {
+                return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+           
+      
+              })
+              .catch(function (error) {
+                return dispatch({ type : "HOME_ERROR", payload : error } )
+              });
+            })
           .catch(function (error) {
             return dispatch({ type : "HOME_ERROR", payload : error } )
           });
          
-    }/*
-     fetch(URL+"home", {
-      method: 'POST', 
-      headers: {
-        ...headers
-      },
-      credentials:'include'
-    }).then(function (response) {
-      //callback(response.data.status)
-      console.log("res=>"+JSON.stringify(response))
-      //return dispatch({ type : "HOME_RESULT", payload : response.data } )
-    }).catch(function (error) {
-      return dispatch({ type : "HOME_ERROR", payload : error } )
-    });
-}*/
+    }
 }
 export function LOGOUT(){
   return  dispatch => {
       
       axios.get(URL+"logout",{withCredentials: true})
         .then(function (response) {
-          console.log("actions")
+         
           return dispatch({ type : "LOGOUT", payload : response.data } )
          
         })
@@ -67,20 +54,6 @@ export function LOGOUT(){
 }
 
 
-  export function LOAD(payload){
-    return  dispatch => {
-        
-        axios.post(URL+"LOAD", payload)
-          .then(function (response) {
-            return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
-          })
-          .catch(function (error) {
-            return dispatch({ type : "HOME_ERROR", payload : error } )
-          });
-         
-     }
-     
-    }  
 export function UploadFile(payload){
       return  dispatch => {
           
