@@ -10,14 +10,14 @@ export function INIT(callback){
           .then(function (response) {
               var userid = response.data.user._id;
               dispatch({ type : "HOME_RESULT", payload : response.data } )
-              
-              axios.post(URL+"home/root",{userid:response.data.user._id})
+            
+              axios.post(URL+"home/root",{userid:userid})
               .then(function (response) {
 
-              
-                dispatch({ type : "ROOT_RESULT", payload : response.data } )
                 var rootid = response.data.rootid
-                axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":response.data.rootid}).then((response)=>{
+                dispatch({ type : "ROOT_RESULT", payload : response.data } )
+                
+                axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":rootid}).then((response)=>{
                   callback(rootid)
                   return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
                  
@@ -97,4 +97,21 @@ export function LOADFOLDER(userid,parentfolderid){
           });
        
   }
+}
+export function share(users,userid,contentid){
+  console.log("contentid"+contentid);
+  return  dispatch => {
+   
+      axios.post(URL+"share", {"users":users,"userid":userid,"contentid":contentid})
+        .then(function (response) {
+          return dispatch({ type : "SHARE_RESULT", payload : response.data } )
+               
+              }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+     
+      
+       
+   }
+  
 }

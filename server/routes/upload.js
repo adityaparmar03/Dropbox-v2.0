@@ -20,7 +20,7 @@ router.post('/', upload, function (req, res, next) {
    
     kafka.make_request('uploadfile_topic',{
         "originalname":req.file.originalname,
-        "virtualname":req.file.virtualname,
+        "virtualname":req.file.filename,
         "type":"file",
         "date":getDate(),
         "star":"no",

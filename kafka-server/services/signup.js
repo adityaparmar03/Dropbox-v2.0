@@ -27,6 +27,7 @@ function handle_request(msg, callback){
         newUser.password = createHash(msg.password)
         newUser.firstname = msg.firstname
         newUser.lastname = msg.lastname
+        newUser.all = msg.firstname+" "+msg.lastname+" ("+msg.email+")"
       
         // save the user
         newUser.save(function(err,user) {

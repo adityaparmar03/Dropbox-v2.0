@@ -7,5 +7,6 @@ module.exports = mongoose.model('Content',{
     date:String,
     star:String,
     type:String,
-    userid:String
+    userid:String,
+    members : { type : Array , "default" : [] }
 });

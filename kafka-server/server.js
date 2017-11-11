@@ -6,6 +6,8 @@ var upload = require('./services/upload');
 var root = require('./services/root');
 var createfolder = require('./services/createfolder');
 var loadfolder = require('./services/loadfolder');
+var users = require('./services/users');
+var share = require('./services/share')
 //database connection
 var mongoose = require('mongoose');
 mongoose.connect(("mongodb://localhost:27017/Dropbox"), { useMongoClient: 
@@ -48,3 +50,5 @@ test("uploadfile_topic",upload)
 test("root_topic",root)
 test("createfolder_topic",createfolder)
 test("loadfolder_topic",loadfolder)
+test("loadusers_topic",users)
+test("share_topic",share)

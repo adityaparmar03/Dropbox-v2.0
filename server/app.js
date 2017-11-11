@@ -98,6 +98,12 @@ app.use('/home',home);
 var folder = require('./routes/folder')
 app.use('/folder',folder);
 
+var users = require('./routes/users')
+app.use('/users',users);
+
+var share = require('./routes/share')
+app.use('/share',share);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
