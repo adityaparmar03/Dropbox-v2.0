@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Index from './components/index';
 import Home from './components/home'
-import Test from './components/test'
+import Activitylog from './components/activitylog';
+import Profile from './components/profile'
+
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import createBrowserHistory from 'history/createBrowserHistory' 
@@ -18,7 +20,9 @@ ReactDOM.render(
          <Route exact path="/" component={Home}/>
          <Route  path="/home" component={Home}/>
          <Route path="/signin" component={Index} />
-         <Route path="/test" component={Test} />
+         <Route path="/activitylog" component={Activitylog} />
+         <Route path="/profile" component={Profile} />
+        
          </div>
         
      </Router>

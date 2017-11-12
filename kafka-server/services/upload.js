@@ -1,5 +1,6 @@
 var Content = require('../model/content');
 var Mapping = require('../model/mapping');
+var Activitylog = require('../model/acitivitylog');
 
 function handle_request(msg, callback){
     console.log("I m calling"+msg)
@@ -36,6 +37,12 @@ function handle_request(msg, callback){
                             status : 'error'
                         });
                     } 
+                    var acitivitylog = new Activitylog();
+                    acitivitylog.activity = content.originalname+" "+content.type+" "+"uploaded."
+                    acitivitylog.date = content.date;
+                    acitivitylog.userid = content.userid;
+                    acitivitylog.save();
+
                     callback(null, {
                         content:content,
                         msg : 'File successfully uploaded.',

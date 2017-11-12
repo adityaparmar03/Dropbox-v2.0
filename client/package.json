@@ -8,6 +8,7 @@
     "prop-types": "^15.5.10",
     "query-string": "^5.0.1",
     "react": "^15.6.1",
+    "react-alert": "^2.4.0",
     "react-dom": "^15.6.1",
     "react-image": "^1.0.1",
     "react-redux": "^5.0.6",

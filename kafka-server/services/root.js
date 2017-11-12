@@ -15,7 +15,7 @@ function handle_request(msg, callback){
         }
          callback(null, {
                 rootid:data.id,
-                msg : 'successful login.',
+                msg : 'get root successfully. ',
                 status : 'success'
             });
         

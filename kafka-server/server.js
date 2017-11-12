@@ -7,11 +7,20 @@ var root = require('./services/root');
 var createfolder = require('./services/createfolder');
 var loadfolder = require('./services/loadfolder');
 var users = require('./services/users');
-var share = require('./services/share')
-//database connection
+var share = require('./services/share');
+var profile = require('./services/profile');
+var deletecontent = require('./services/delete');
+var activitylog = require('./services/activitylog');
+//database connection pooling 
 var mongoose = require('mongoose');
-mongoose.connect(("mongodb://localhost:27017/Dropbox"), { useMongoClient: 
-true });
+mongoose.connect(("mongodb://localhost:27017/Dropbox"), { 
+useMongoClient: true,
+ autoIndex: false, // Don't build indexes
+reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+reconnectInterval: 500, // Reconnect every 500ms
+poolSize: 10, // Maintain up to 10 socket connections
+// If not connected, return errors immediately rather than waiting for reconnect
+bufferMaxEntries: 0 });
 var db = mongoose.connection;
 
 //
@@ -52,3 +61,6 @@ test("createfolder_topic",createfolder)
 test("loadfolder_topic",loadfolder)
 test("loadusers_topic",users)
 test("share_topic",share)
+test("profile_topic",profile)
+test("delete_topic",deletecontent)
+test("activitylog_topic",activitylog)

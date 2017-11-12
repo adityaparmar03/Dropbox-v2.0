@@ -13,10 +13,10 @@ class Menu extends Component {
         return (
             <div className="jumbotron" style={{height:"720px",marginLeft:"-12px"}}>
                        <div className="vertical-menu">
-                            <a onClick={()=>this.props.history.push("/")}>
+                            <a onClick={()=>this.props.history.push("/home")}>
                             <img src={require("../images/dropbox_logo.svg")} width="50" height="50" alt=""/>   
                             </a>
-                            <a onClick={()=>this.props.history.push("/")}>My files</a>
+                            <a onClick={()=>this.props.history.push("/home")}>My files</a>
                             <a onClick={()=>this.props.history.push("/activitylog")}>Activity</a>
                            
                             <a onClick={()=>this.props.history.push("/profile")}>Profile</a>

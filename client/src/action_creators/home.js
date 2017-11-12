@@ -9,27 +9,34 @@ export function INIT(callback){
        axios.get(URL+"user",{withCredentials: true})
           .then(function (response) {
               var userid = response.data.user._id;
-              dispatch({ type : "HOME_RESULT", payload : response.data } )
-            
-              axios.post(URL+"home/root",{userid:userid})
-              .then(function (response) {
-
-                var rootid = response.data.rootid
-                dispatch({ type : "ROOT_RESULT", payload : response.data } )
-                
-                axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":rootid}).then((response)=>{
-                  callback(rootid)
-                  return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
-                 
-                }).catch(function (error) {
-                return dispatch({ type : "HOME_ERROR", payload : error } )
+              if(userid===undefined || userid===""){
+                return dispatch({ type : "HOME_RESULT", payload : response.data } )
+              }
+              else{
+                dispatch({ type : "HOME_RESULT", payload : response.data } )
+                axios.post(URL+"home/root",{userid:userid})
+                .then(function (response) {
+  
+                  var rootid = response.data.rootid
+                  dispatch({ type : "ROOT_RESULT", payload : response.data } )
+                  
+                  axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":rootid}).then((response)=>{
+                    callback(rootid)
+                    return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
+                   
+                  }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+                  });
+             
+        
+                })
+                .catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
                 });
+              }
+             
+             
            
-      
-              })
-              .catch(function (error) {
-                return dispatch({ type : "HOME_ERROR", payload : error } )
-              });
             })
           .catch(function (error) {
             return dispatch({ type : "HOME_ERROR", payload : error } )
@@ -88,7 +95,7 @@ export function UploadFolder(parentfolderid,foldername,userid){
 }
 export function LOADFOLDER(userid,parentfolderid){
   return (dispatch) => {
-    //sessionStorage.fname = folderid;
+   
     axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":parentfolderid}).then((response)=>{
               return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
          
@@ -98,14 +105,21 @@ export function LOADFOLDER(userid,parentfolderid){
        
   }
 }
-export function share(users,userid,contentid){
+export function share(users,userid,contentid,parentfolderid){
   console.log("contentid"+contentid);
   return  dispatch => {
    
       axios.post(URL+"share", {"users":users,"userid":userid,"contentid":contentid})
         .then(function (response) {
-          return dispatch({ type : "SHARE_RESULT", payload : response.data } )
-               
+           dispatch({ type : "SHARE_RESULT", payload : response.data } )
+          
+           axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":parentfolderid}).then((response)=>{
+            return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
+       
+              }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+              });
+
               }).catch(function (error) {
                   return dispatch({ type : "HOME_ERROR", payload : error } )
                 });
@@ -115,3 +129,27 @@ export function share(users,userid,contentid){
    }
   
 }
+export function deleteContent(parentfolderid,file,userid){
+  
+    return  dispatch => {
+     
+        axios.post(URL+"delete", {"userid":userid,"file":file,"parentfolderid":parentfolderid})
+          .then(function (response) {
+             dispatch({ type : "DELETE_RESULT", payload : response.data } )
+                 
+             axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":parentfolderid}).then((response)=>{
+              return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
+         
+                }).catch(function (error) {
+                    return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+  
+                }).catch(function (error) {
+                    return dispatch({ type : "HOME_ERROR", payload : error } )
+                  });
+       
+        
+         
+     }
+    
+  }

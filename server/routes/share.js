@@ -22,7 +22,8 @@ router.post('/', function(req, res, next) {
          }else{
      
                  res.json({
-                     users:results.users
+                    msg : results.msg,
+                    status : results.status
                  })
             
              }

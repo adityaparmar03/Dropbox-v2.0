@@ -5,13 +5,14 @@ import * as myactions from '../action_creators/home';
  
 import { withRouter } from 'react-router-dom'
 import Menu from './menu'
-import Test from './test'
+import Menu2 from './menu2'
 import  '../css/uploadfile.css'
 import '../css/table.css'
 import 'react-select/dist/react-select.css';
 import Select from 'react-select';
 import fetch from 'isomorphic-fetch';
 import ReactTooltip from 'react-tooltip'
+import AlertContainer from 'react-alert'
 
 class Home extends Component {
     constructor(props){
@@ -31,7 +32,29 @@ class Home extends Component {
            shareUser:[]
         }
      }
-    
+     // ......Error Display .....
+     alertOptions = {
+        offset: 14,
+        position: 'top center',
+        theme: 'dark',
+        time: 5000,
+        transition: 'scale'
+      }
+     errorshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/error.png')} />
+        })
+      }
+     successshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/success.png')} />
+        })
+      }
+     // On Load 
     componentDidMount() {
 
         if(this.state.currentfolderid === "")
@@ -78,11 +101,21 @@ class Home extends Component {
                 lastname:nextProps.home.lastname,
                 files:nextProps.home.files.reverse(),
                 userid:nextProps.home.userid,
-                currentfolderid:nextProps.home.currentfolderid
+                currentfolderid:nextProps.home.currentfolderid,
+                status:nextProps.home.status,
+                msg:nextProps.home.msg
               
               })
            
           }  
+        if(nextProps.home.status ==="success"){
+            if(nextProps.home.msg!="")
+            this.successshowAlert(nextProps.home.msg)
+        }
+        else{
+            if(nextProps.home.msg!="")
+            this.errorshowAlert(nextProps.home.msg)
+        }
          
         }
     }
@@ -90,7 +123,7 @@ class Home extends Component {
 
         var link="http://localhost:9000/files/"+file.virtualname 
         this.setState({publicsharinglink:link})
-        this.setState({sharedcontentid:file._id})
+        this.setState({sharedcontentid:file})
  
  
      }
@@ -130,15 +163,26 @@ class Home extends Component {
         {
             this.check =1;
             var star = file.star;
+            this.members=[];
             if(file.members.length>0){
-                this.sharemsg = file.members.length+1 +" members." 
-                this.members = "Aidtya<br>rakul";
-             }
-             else{
-
-                 this.sharemsg = "Only you"
-                
-             }
+              
+              
+               this.members = file.members.map((member,i)=> member.firstname+" "+member.lastname+"<br>")
+               this.members.push(this.state.firstname+" "+this.state.lastname+"<br>")
+               var uniqueArray = this.members.filter(function(item, pos, self) {
+                return self.indexOf(item) == pos;
+               },this)
+               this.members=uniqueArray
+               if(this.members.length>1)
+                    this.sharemsg = this.members.length +" members"
+               else
+                    this.sharemsg = "Only you"
+            }
+            else{
+                this.sharemsg = "Only you"
+                this.members.push(this.state.firstname+" "+this.state.lastname)
+               
+            }
 
         return (<tr key={file._id}>
             <td style={{width:"50%"}}>
@@ -150,9 +194,9 @@ class Home extends Component {
             <p>{(file.date).substring(0,25)}</p>    
             </td>
             <td>
-            <p><a data-tip={this.members} data-html={true}>{this.sharemsg}</a></p>   
-            <ReactTooltip place="bottom" type="dark" effect="float" html={true} />    
-            </td>
+            <p><a data-tip={this.members.toString().replace(/,/g, "")} data-html={true}>{this.sharemsg}</a></p>   
+            <ReactTooltip place="bottom" type="dark" effect="float" html={true} /> 
+           </td>
             <td>
             <button type="button" className="btn btn-default dropdown-toggle" id="menu1"
              data-toggle="dropdown"><b>&middot;&middot;&middot;</b></button>
@@ -162,7 +206,7 @@ class Home extends Component {
                 <a href={"http://localhost:9000/files/"+file.virtualname} download>Download</a></li>
                 <li><a data-toggle="modal" data-target="#fileModal" onClick={()=>this.share(file)}>Share</a></li>
                 <li><a onClick={()=>this.props.deleteContent(this.state.currentfolderid,
-                    file._id,this.state.userid )}>Delete</a></li>
+                    file,this.state.userid )}>Delete</a></li>
             </ul>
             </td>     
             </tr>
@@ -172,10 +216,17 @@ class Home extends Component {
             this.check =1;
             this.members=[];
             if(file.members.length>0){
-               this.sharemsg = file.members.length+1 +" members." 
-               this.image = require('../images/gfolder.png')
-               this.members = file.members.map((member,i)=> member.firstname+" "+member.lastname+"<br>")
-               this.members.push(this.state.firstname+" "+this.state.lastname)
+                this.image = require('../images/gfolder.png')
+                this.members = file.members.map((member,i)=> member.firstname+" "+member.lastname+"<br>")
+                this.members.push(this.state.firstname+" "+this.state.lastname+"<br>")
+                var uniqueArray = this.members.filter(function(item, pos, self) {
+                 return self.indexOf(item) == pos;
+                },this)
+                this.members=uniqueArray
+                if(this.members.length>1)
+                    this.sharemsg = this.members.length +" members"
+                else
+                    this.sharemsg = "Only you"
             }
             else{
                 this.sharemsg = "Only you"
@@ -203,7 +254,7 @@ class Home extends Component {
                 
                 <li><a data-toggle="modal" data-target="#folderModal" onClick={()=>this.share(file)}>Share</a></li>
                 <li><a onClick={()=>this.props.deleteContent(this.state.currentfolderid,
-                    file.contentid,this.state.userid )}>Delete</a></li>
+                    file,this.state.userid )}>Delete</a></li>
             
          
             </ul>
@@ -269,7 +320,7 @@ class Home extends Component {
                 </div>
                 <div className="col-6 col-md-8">
                
-                
+                    <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
                     <div style={{marginTop:"5%"}}>
                         <h4>Dropbox</h4>
                     </div>
@@ -306,9 +357,8 @@ class Home extends Component {
                 </div>
                 
                 <div className="col-6 col-md-2">
-                    Hello, {this.state.firstname}
-                    <button className="btn btn-link" onClick={()=>{this.props.LOGOUT()}}>logout </button>
-                    <br/>
+                   
+                    <Menu2/> 
                     <div style={{marginTop:"40%"}}>
                     <div className="upload-filebtn-wrapper">
                     <button className="btn btn-primary" style={{width:"150px"}} >Upload a file</button>
@@ -358,7 +408,8 @@ class Home extends Component {
                     <div className="modal-footer">
                     <button className="btn btn-primary"
                     onClick={()=>this.props.share(this.state.shareUser,
-                        this.state.userid,this.state.sharedcontentid)}>Share</button>    
+                        this.state.userid,this.state.sharedcontentid,
+                        this.state.currentfolderid)}>Share</button>    
 
                     <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
@@ -401,7 +452,8 @@ class Home extends Component {
                     <button className="btn btn-primary"
                     onClick={()=>this.props.share(this.state.shareUser,
                         this.state.userid,
-                        this.state.sharedcontentid)}>Share</button>    
+                        this.state.sharedcontentid,
+                        this.state.currentfolderid)}>Share</button>    
                     <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>

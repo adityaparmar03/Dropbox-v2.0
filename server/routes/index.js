@@ -39,7 +39,7 @@ module.exports = function(passport){
              res.json({ 
                 user: req.user,
                 status: "success",
-                msg:"welcome to home."
+                msg:"Welcome to Dropbox."
              });
         }else{
             console.log("err")

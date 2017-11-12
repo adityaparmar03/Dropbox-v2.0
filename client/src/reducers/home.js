@@ -15,12 +15,12 @@ export default function(state=home_initialstate,action){
         return{
             ...state,
             status:action.payload.status,
-            msg:action.payload.msg,
+            //msg:action.payload.msg,
             firstname:action.payload.user.firstname,  
             lastname:action.payload.user.lastname,
             email:action.payload.user.email,
             userid:action.payload.user._id,
-            
+            msg:""
                
         }
     }
@@ -46,7 +46,8 @@ export default function(state=home_initialstate,action){
             ...state,
             files:action.payload.content,
             currentfolderid:action.payload.currentfolderid,
-            status:action.payload.status
+            status:action.payload.status,
+            msg:""
         }
     }
     
@@ -70,8 +71,8 @@ export default function(state=home_initialstate,action){
     if(action.type === "ROOT_RESULT"){
         return{
             ...state,
-            currentfolderid:action.payload.rootid
-                 
+            currentfolderid:action.payload.rootid,
+            msg:""     
         }
     }
     if(action.type === "CREARE_FOLDER_ERROR"){
@@ -90,6 +91,24 @@ export default function(state=home_initialstate,action){
             msg:action.payload.msg
         }
     }
+
+    if(action.type === "DELETE_RESULT"){
+        return{
+            ...state,
+            status:action.payload.status,
+            msg:action.payload.msg
+                 
+        }
+    }
+    if(action.type === "SHARE_RESULT"){
+        return{
+            ...state,
+            status:action.payload.status,
+            msg:action.payload.msg
+                 
+        }
+    }
+   
     if(action.type === "LOGOUT"){
         return{
             ...state,

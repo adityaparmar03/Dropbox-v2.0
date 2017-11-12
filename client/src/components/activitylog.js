@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import * as myactions from '../action_creators/activitylog';
 import { withRouter } from 'react-router-dom'
 import Menu from './menu'
+import Menu2 from './menu2'
 import '../css/table.css'
 
 class Activitylog extends Component {
@@ -29,17 +30,11 @@ class Activitylog extends Component {
     }
 
     componentDidMount() {
-        var token = localStorage.getItem("aditya-token");
         
-        if(localStorage.getItem("aditya-token")===null)
-        {
-            this.props.history.push('/signin');
-        }
-        else{
 
-          this.props.INIT(token);
+         this.props.INIT();
                              
-        }
+        
       }
     
       display(activity,i){
@@ -47,7 +42,7 @@ class Activitylog extends Component {
         return (<tr key={i}>
                     
                     <td style={{width:"50%"}}>
-                        {activity.msg}
+                        {activity.activity}
                     </td>   
                     <td>
                         {activity.date.substring(0,25)}
@@ -70,7 +65,7 @@ class Activitylog extends Component {
                       <div style={{paddingTop:"5%"}}> 
                          <h5><b>Activity Report </b></h5>
                          <hr/>
-                         <table className="table">
+                         <table className="table table-striped">
                          <thead>
                           <tr>
                               
@@ -92,10 +87,8 @@ class Activitylog extends Component {
                     <div className="col-6 col-md-2">
                          
                
-          
-                    <button className="btn btn-link" onClick={()=>{this.props.LOGOUT();this.props.history.push('/signin');}}>logout </button>
-                   
-               
+                    <Menu2/>
+                    
                     </div>
                         
                       

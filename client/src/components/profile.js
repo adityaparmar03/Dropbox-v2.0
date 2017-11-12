@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import * as myactions from '../action_creators/profile';
 import { withRouter } from 'react-router-dom'
 import Menu from './menu'
+import Menu2 from './menu2'
+import AlertContainer from 'react-alert'
 
 
 class Profile extends Component {
@@ -20,18 +22,32 @@ class Profile extends Component {
             status:"",
             msg:"",
             userid:"",
-            isPasswordchanged:"NO"
+         
         }
     }
+    alertOptions = {
+        offset: 14,
+        position: 'top center',
+        theme: 'dark',
+        time: 5000,
+        transition: 'scale'
+      }
+     errorshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/error.png')} />
+        })
+      }
+     successshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/success.png')} />
+        })
+      }
+
     updateState(name, value){
-           
-            
-           
-                if(name==="password"){
-                    this.setState({password : value});
-                    this.setState({isPasswordchanged:"YES"})
-                }
-               
 
                 if(name==="firstname")
                 this.setState({firstname : value});
@@ -47,6 +63,11 @@ class Profile extends Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.profile) {
+            if(nextProps.profile.userid === undefined || nextProps.profile.status === 'logout'){
+                this.props.history.push('/signin');
+          }
+          else{
+
           this.setState({
             email:nextProps.profile.email,
             password:nextProps.profile.password,
@@ -60,37 +81,26 @@ class Profile extends Component {
           
           })
         }
+        }
+        if(nextProps.profile.status ==="success"){
+            this.successshowAlert(nextProps.profile.msg)
+        }
+        else{
+            this.errorshowAlert(nextProps.profile.msg)
+        }
     }
 
     componentDidMount() {
-        var token = localStorage.getItem("aditya-token");
-        
-        if(localStorage.getItem("aditya-token")===null)
-        {
-            this.props.history.push('/signin');
-        }
-        else{
+       
 
-          this.props.INIT(token);
+          this.props.INIT();
                              
-        }
-      }
-    
-      errordisplay(){
-        if(this.state.msg!=="token verified successfully"){
-            if(this.state.status==="success"){
-                return (<div className="alert alert-success alert-dismissable fade in">
-                <a  className="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {this.state.msg} </div>)
-            }else{
-                return (<div className="alert alert-danger alert-dismissable fade in">
-                <a className="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {this.state.msg} </div>)
-            }
-        }else{
-            <div></div>
-        } 
+        
     }
+    
+  
+
+    
     
     render() {
         return (
@@ -102,7 +112,8 @@ class Profile extends Component {
                        <Menu/>
                 </div>
                 <div className="col-6 col-md-8">
-                {this.errordisplay()}
+                <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
+       
                     <div style={{paddingTop:"5%"}}> 
                         <h5><b>Personal Account</b></h5>
                         <hr/>
@@ -166,13 +177,8 @@ class Profile extends Component {
                     </div>    
                 </div>
                 <div className="col-6 col-md-2">
-                         
-               
-          
-                    <button className="btn btn-link" onClick={()=>{this.props.LOGOUT();this.props.history.push('/signin');}}>logout </button>
-                   
-               
-                    </div>
+                      <Menu2/>   
+                </div>
             </div>
             </div>
                 

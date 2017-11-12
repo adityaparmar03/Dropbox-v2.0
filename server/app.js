@@ -104,6 +104,16 @@ app.use('/users',users);
 var share = require('./routes/share')
 app.use('/share',share);
 
+var profile = require('./routes/profile')
+app.use('/profile',profile);
+
+var deletecontent = require('./routes/delete')
+app.use('/delete',deletecontent);
+
+var activitylog = require('./routes/activitylog')
+app.use('/activitylog',activitylog);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

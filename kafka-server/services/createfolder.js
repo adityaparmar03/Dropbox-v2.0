@@ -2,6 +2,7 @@ var User = require('../model/user');
 var bCrypt = require('bcrypt-nodejs');
 var Content = require('../model/content');
 var Mapping = require('../model/mapping');
+var Activitylog = require('../model/acitivitylog');
 
 function handle_request(msg, callback){
 
@@ -42,6 +43,14 @@ function handle_request(msg, callback){
                                     status : 'error'
                                 });
                             } 
+
+                            var acitivitylog = new Activitylog();
+                            acitivitylog.activity = content.originalname+" "+content.type+" "+"created."
+                            acitivitylog.date = getDate();
+                            acitivitylog.userid = content.userid;
+                            acitivitylog.save();
+
+
                             callback(null, {
                                 content:content,
                                 msg : 'Folder successfully uploaded.',
