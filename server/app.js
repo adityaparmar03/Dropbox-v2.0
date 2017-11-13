@@ -113,6 +113,9 @@ app.use('/delete',deletecontent);
 var activitylog = require('./routes/activitylog')
 app.use('/activitylog',activitylog);
 
+var star = require('./routes/star')
+app.use('/star',star);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

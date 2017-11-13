@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import * as myactions from '../action_creators/signin';
  
 import { withRouter } from 'react-router-dom'
-
+import AlertContainer from 'react-alert'
 
 class SignIn extends Component {
     constructor(props){
@@ -20,6 +20,27 @@ class SignIn extends Component {
             
         }
     }
+    alertOptions = {
+        offset: 14,
+        position: 'top center',
+        theme: 'dark',
+        time: 5000,
+        transition: 'scale'
+      }
+     errorshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/error.png')} />
+        })
+      }
+     successshowAlert = (msg) => {
+        this.msg.show(msg, {
+          time: 5000,
+          type: 'success',
+          icon: <img src={require('../images/success.png')} />
+        })
+      }
     componentDidMount() {
         this.props.INIT()
        
@@ -100,6 +121,7 @@ class SignIn extends Component {
     render() {
         return (
             <div style={{backgroundColor:"white",width:"70%"}}>
+             <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
                   <input type="email" className="form-control" placeholder="Email" ref="email"/><br/>
                   <input type="password" className="form-control" placeholder="Password" ref="password" /><br/>
                   <button className="btn btn-primary" onClick={()=>this.handleSubmit()}> Sign in</button>

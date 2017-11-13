@@ -9,7 +9,7 @@ var connection=[];
 establishConnection = function(callback){
       if(connection.length===0){
               //  console.log("first")
-                MongoClient.connect(url, { poolSize: 10 },function(err, db) {
+                MongoClient.connect(url,function(err, db) {
                     assert.equal(null, err);
             
                         connection = db

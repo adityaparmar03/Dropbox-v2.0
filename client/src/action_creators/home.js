@@ -153,3 +153,24 @@ export function deleteContent(parentfolderid,file,userid){
      }
     
   }
+  export function dostar(contentid,value,curentfolderid,userid){
+    
+    return  dispatch => {
+       
+        axios.post(URL+"star", {"contentid":contentid,"value":value})
+          .then(function (response) {
+            dispatch({ type : "STAR_RESULT", payload : response.data } )
+            axios.post(URL+"folder/load", {"userid":userid,"parentfolderid":curentfolderid}).then((response)=>{
+              return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
+         
+                }).catch(function (error) {
+                    return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+          })
+          .catch(function (error) {
+            return dispatch({ type : "HOME_ERROR", payload : error } )
+          });
+         
+     }
+    
+  }

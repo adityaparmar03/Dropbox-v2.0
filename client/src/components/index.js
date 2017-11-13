@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import Nav from './nav'
 import SignIn from './signin'
 import SignUp from './signup'
 
@@ -28,12 +28,14 @@ class Index extends Component {
    
     render() {
         return (
-        <div className="container-fluid">  
-          
+            <div className="container-fluid">  
+          <Nav/>
           <div className="container">
           <div className="row" style={{marginTop: "100px"}}>
             <div className="col-6 col-md-6">
-                 
+                <div style={{float:"right"}}>
+                <img src={require("../images/cartoon.png")} width="250" height="250" alt=""/>   
+                </div>    
             </div>
             <div className="col-6 col-md-6">
               <div>
@@ -51,7 +53,6 @@ class Index extends Component {
             </div>
           </div>
           </div>
-          
         );
     }
 }

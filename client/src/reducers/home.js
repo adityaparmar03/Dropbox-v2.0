@@ -100,6 +100,14 @@ export default function(state=home_initialstate,action){
                  
         }
     }
+    if(action.type === "STAR_RESULT"){
+        return{
+            ...state,
+            status:action.payload.status,
+            msg:action.payload.msg
+                 
+        }
+    }
     if(action.type === "SHARE_RESULT"){
         return{
             ...state,

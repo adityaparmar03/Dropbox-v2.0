@@ -145,10 +145,10 @@ class Home extends Component {
     star(isstar,contentid)
     {
         if(isstar==="YES"){
-            return <img onClick={()=>this.props.dostar(contentid,"NO",this.state.currentfolderid,this.state.userid)} src={require('../images/bluestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
+            return <img onClick/*onClick={()=>this.props.dostar(contentid,"NO",this.state.currentfolderid,this.state.userid)} */ src={require('../images/bluestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
         }
         else{
-            return <img onClick={()=>this.props.dostar(contentid,"YES",this.state.currentfolderid,this.state.userid)} src={require('../images/whitestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
+            return <img /*onClick={()=>this.props.dostar(contentid,"YES",this.state.currentfolderid,this.state.userid)}*/ src={require('../images/whitestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
             
         }
     }
@@ -188,7 +188,7 @@ class Home extends Component {
             <td style={{width:"50%"}}>
             <img src={require('../images/file.png')} alt="" style={{width:"50px",height:"50px"}}/>    
             <a  href={"http://localhost:9000/files/"+file.virtualname} target="_blank">{file.originalname}</a>
-            {this.star(file.star,file.contentid)}
+            {this.star(file.star,file._id)}
             </td>
             <td>
             <p>{(file.date).substring(0,25)}</p>    
@@ -238,7 +238,7 @@ class Home extends Component {
             
             <img src={this.image} alt="" style={{width:"50px",height:"50px"}}/>        
             <button className="btn btn-link"  onClick={()=>this.getData(file,"add")}>{file.originalname}</button> 
-            {this.star(file.star,file.contentid)}
+            {this.star(file.star,file._id)}
             </td>
             <td>
             <p>{(file.date).substring(0,25)}</p>    
@@ -366,7 +366,7 @@ class Home extends Component {
                     </div>
                     <br/><br/>
                     <input type="text" className="form-control" ref = "foldername" 
-                    id="newfoldername" placeholder="Folder Name" style={{width:"150px"}}/>
+                    id="newfoldername" placeholder="Folder/Group Name" style={{width:"150px"}}/>
                     <br/>
                     <button className="btn btn-primary" style={{width:"150px"}}
                     onClick={()=>this.props.UploadFolder(this.state.currentfolderid,

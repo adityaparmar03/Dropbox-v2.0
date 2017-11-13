@@ -11,7 +11,9 @@ var share = require('./services/share');
 var profile = require('./services/profile');
 var deletecontent = require('./services/delete');
 var activitylog = require('./services/activitylog');
+var star = require('./services/star');
 //database connection pooling 
+// Manual Database Pooling is in mongo.js
 var mongoose = require('mongoose');
 mongoose.connect(("mongodb://localhost:27017/Dropbox"), { 
 useMongoClient: true,
@@ -23,7 +25,8 @@ poolSize: 10, // Maintain up to 10 socket connections
 bufferMaxEntries: 0 });
 var db = mongoose.connection;
 
-//
+// Manual Database Pooling is in mongo.js
+
 function test(topic_name,fname){
     //var topic_name = 'root_topic';
     var consumer = connection.getConsumer(topic_name);
@@ -64,3 +67,4 @@ test("share_topic",share)
 test("profile_topic",profile)
 test("delete_topic",deletecontent)
 test("activitylog_topic",activitylog)
+test("star_topic",star)

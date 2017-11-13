@@ -22,7 +22,7 @@ class Activitylog extends Component {
           this.setState({
            
 
-            activity:nextProps.activitylog.activity
+            activity:nextProps.activitylog.activity.reverse()
            
           
           })
